@@ -1,0 +1,17 @@
+{
+  "name": "charity-donation-platform",
+  "version": "1.0.0",
+  "description": "Charity & Donation Management Platform",
+  "scripts": {
+    "server": "npm --prefix server run dev",
+    "client": "npm --prefix client run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "install:all": "npm --prefix server install && npm --prefix client install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "mongodb": "^7.6.0"
+  }
+}
