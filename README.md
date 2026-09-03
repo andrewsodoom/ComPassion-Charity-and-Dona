@@ -7,6 +7,7 @@ A production-ready, full-stack Charity & Donation Management Web Application con
 Key Highlights & Features
 
 1. Multi-Role Authentication
+
 - **👤 Donor**: Discover causes, make one-time or monthly donations, download tax-deductible receipts, track personal lifetime giving.
 - **🏢 Charity Organization**: Create and manage campaigns, craft stories with AI assistance, publish field progress reports with photos, recruit and approve volunteers.
 - **🙋 Volunteer**: Browse upcoming community drives, apply with availability notes, track verified service hours, earn impact badges.
@@ -14,11 +15,13 @@ Key Highlights & Features
 - **🔐 Secure Password Reset**: No password recovery. Users request a reset token, receive a secure reset flow, and set a new password without exposing the old one.
 
 2. Campaign Management & Discovery
+
 - **Multifaceted Filters**: Filter by Category (Education 🎓, Healthcare 🏥, Food 🍲, Housing 🏠, Environment 🌱, Animals 🐾, Disaster Relief 🚨), Urgency, Funding Status, and Verified-only Nonprofits.
 - **Automated Progress Meter**: Dynamic calculation of funds raised vs goal, donor count, and milestone badges (50% Halfway, 100% Fully Funded).
 - **Matching Donor Pledges**: Highlighting 2X matching grants from corporate and philanthropic sponsors.
 
 3. Interactive Payment Gateway Simulator
+
 - **💳 Stripe Credit / Debit Card**: Interactive 3D credit card preview with real-time field formatting and 256-bit encryption simulation.
 - **📱 Razorpay UPI & QR Code**: Scannable UPI QR code and virtual payment address verification.
 - **🏛️ NetBanking**: Top bank options (HDFC, ICICI, SBI, Axis, Chase).
@@ -28,22 +31,26 @@ Key Highlights & Features
 - **🌍 Country-Neutral Defaults**: The platform defaults to **Ghana** for organization registration and review setup, while still supporting country-specific compliance flows.
 
 4. Tax-Exempt Donation Receipts & Compliance
+
 - Automated serial-numbered receipts generated instantly upon payment confirmation.
 - Includes organization registration details, donor identity, payment method, tax relief breakdown, authorized digital signature, and verification QR code.
 - **1-Click Printable & PDF Export**: Clean print stylesheet formatted for tax filing.
 - **External Compliance Pipeline**: Charity verification submissions can be queued locally or sent to a real external review API through `COMPLIANCE_API_URL` when configured.
 
 5. Volunteer Recruitment & Management
+
 - Charities post volunteer opportunities with date, time, location, skills needed, and spots quota.
 - Volunteers apply with 1 click; charities review, approve, or decline applications.
 - Automatic service hours calculation and verified digital certificate badge.
 
 6. Campaign Updates & Community Notifications
+
 - Charities publish real-world progress updates with field photos.
 - Broadcast engine automatically dispatches in-app notifications to all donors who supported the campaign.
 - Notification center with unread counters and direct links.
 
 7. AI Campaign Story & Impact Generator
+
 - **AI Story Writer**: Generates compelling, emotional fundraising narratives, suggested goal targets, and fund allocation splits based on a simple prompt.
 - **AI Takeaways Generator**: Summarizes complex campaign stories into 3 concise bullet points for prospective donors.
 - **AI Impact Calculator**: Calculates real-world impact equivalents (e.g. "$50 provides digital tablets for 2 students").
@@ -207,12 +214,14 @@ npm run dev
 Visit **`http://localhost:5173`** in your browser.
 
 4. Compliance / Verification Flow
+
 - A charity submits legal documents and registration details from the dashboard.
 - The payload is sent to the external compliance provider when `COMPLIANCE_API_URL` is set.
 - If no provider is configured, the system safely stores the submission in a local queue and marks it as pending for review.
 - An admin can approve, reject, or keep a charity pending from the admin verification hub.
 
 5. Password Reset Flow
+
 - Users request a reset from the login screen.
 - A secure token is generated and stored server-side.
 - The token is used to set a new password without exposing or recovering the original password.

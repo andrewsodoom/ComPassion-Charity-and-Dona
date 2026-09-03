@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import db from '../config/db.js';
 
-export const createCampaignUpdate = (req, res) => {
+export const createCampaignUpdate = async (req, res) => {
   try {
     const { campaignId, title, content, images = [] } = req.body;
 
@@ -9,7 +9,7 @@ export const createCampaignUpdate = (req, res) => {
       return res.status(400).json({ success: false, message: 'Campaign ID, title, and update content are required' });
     }
 
-    const campaign = db.findById('campaigns', campaignId);
+    const campaign = await db.findById('campaigns', campaignId);
     if (!campaign) {
       return res.status(404).json({ success: false, message: 'Campaign not found' });
     }
@@ -28,14 +28,14 @@ export const createCampaignUpdate = (req, res) => {
       createdAt: new Date().toISOString()
     };
 
-    db.insert('campaignUpdates', newUpdate);
+    await db.insert('campaignUpdates', newUpdate);
 
     // Find all donors who supported this campaign and send notifications
-    const campaignDonations = db.find('donations', d => d.campaignId === campaignId);
+    const campaignDonations = await db.find('donations', d => d.campaignId === campaignId);
     const donorIds = [...new Set(campaignDonations.map(d => d.donorId).filter(Boolean))];
 
-    donorIds.forEach(donorId => {
-      db.insert('notifications', {
+    for (const donorId of donorIds) {
+      await db.insert('notifications', {
         id: `notif_${uuidv4().substring(0, 8)}`,
         userId: donorId,
         title: `Campaign Update: ${title}`,
@@ -45,7 +45,7 @@ export const createCampaignUpdate = (req, res) => {
         isRead: false,
         createdAt: new Date().toISOString()
       });
-    });
+    }
 
     res.status(201).json({
       success: true,
@@ -57,10 +57,10 @@ export const createCampaignUpdate = (req, res) => {
   }
 };
 
-export const getCampaignUpdates = (req, res) => {
+export const getCampaignUpdates = async (req, res) => {
   try {
     const { campaignId } = req.params;
-    const updates = db.find('campaignUpdates', u => u.campaignId === campaignId)
+    const updates = (await db.find('campaignUpdates', u => u.campaignId === campaignId))
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     res.json({

@@ -11,6 +11,19 @@ dotenv.config({ path: path.join(__dirname, '..', '.env') });
 const databasePath = path.resolve(__dirname, '..', process.env.DB_PATH || 'data/database.json');
 const client = new MongoClient(process.env.MONGODB_URI);
 let mongoDatabase;
+let localDatabase;
+
+const useLocalDatabase = () => Boolean(localDatabase);
+
+const loadLocalDatabase = () => {
+  localDatabase = fs.existsSync(databasePath)
+    ? JSON.parse(fs.readFileSync(databasePath, 'utf8'))
+    : {};
+};
+
+const persistLocalDatabase = () => {
+  fs.writeFileSync(databasePath, JSON.stringify(localDatabase, null, 2));
+};
 
 const collection = name => {
   if (!mongoDatabase) {
@@ -53,27 +66,36 @@ const ensureSeedData = async () => {
 };
 
 export const connectDB = async () => {
-  if (!process.env.MONGODB_URI) {
-    throw new Error('MONGODB_URI is not defined in server/.env');
+  if (!process.env.MONGODB_URI || process.env.MONGODB_URI.includes('<cluster-url>')) {
+    loadLocalDatabase();
+    console.log('ℹ️ MongoDB URI is not configured; using local JSON database');
+    return localDatabase;
   }
 
-  await client.connect();
-  mongoDatabase = client.db('blackshepherd');
-  await ensureSeedData();
+  try {
+    await client.connect();
+    mongoDatabase = client.db('blackshepherd');
+    await ensureSeedData();
 
-  console.log('✅ MongoDB Atlas connected');
-  return mongoDatabase;
+    console.log('✅ MongoDB Atlas connected');
+    return mongoDatabase;
+  } catch (err) {
+    loadLocalDatabase();
+    console.warn(`⚠️ MongoDB unavailable (${err.message}); using local JSON database`);
+    return localDatabase;
+  }
 };
 
 export const getDB = () => {
-  if (!mongoDatabase) {
+  if (!mongoDatabase && !localDatabase) {
     throw new Error('Database not connected. Call connectDB() first.');
   }
-  return mongoDatabase;
+  return mongoDatabase || localDatabase;
 };
 
 const dbCompatibility = {
   getCollection: async (collectionName) => {
+    if (useLocalDatabase()) return localDatabase[collectionName] || [];
     const targetCollection = collection(collectionName);
     return await targetCollection.find({}).toArray();
   },
@@ -86,17 +108,39 @@ const dbCompatibility = {
     return docs.find(item => item.id === id) || null;
   },
   insert: async (collectionName, data) => {
+    if (useLocalDatabase()) {
+      if (!Array.isArray(localDatabase[collectionName])) localDatabase[collectionName] = [];
+      localDatabase[collectionName].push(data);
+      persistLocalDatabase();
+      return data;
+    }
     const targetCollection = collection(collectionName);
     await targetCollection.insertOne(data);
     return data;
   },
   update: async (collectionName, id, data) => {
+    if (useLocalDatabase()) {
+      const items = localDatabase[collectionName] || [];
+      const index = items.findIndex(item => item.id === id);
+      if (index === -1) return null;
+      items[index] = { ...items[index], ...data };
+      persistLocalDatabase();
+      return items[index];
+    }
     const targetCollection = collection(collectionName);
     const result = await targetCollection.updateOne({ id }, { $set: data });
     if (result.matchedCount === 0) return null;
     return { ...(await targetCollection.findOne({ id })), ...data };
   },
   remove: async (collectionName, id) => {
+    if (useLocalDatabase()) {
+      const items = localDatabase[collectionName] || [];
+      const index = items.findIndex(item => item.id === id);
+      if (index === -1) return null;
+      const [removed] = items.splice(index, 1);
+      persistLocalDatabase();
+      return removed;
+    }
     const targetCollection = collection(collectionName);
     const item = await targetCollection.findOne({ id });
     if (!item) return null;
@@ -108,6 +152,7 @@ const dbCompatibility = {
     return docs.filter(item => matches(item, query));
   },
   count: async (collectionName) => {
+    if (useLocalDatabase()) return (localDatabase[collectionName] || []).length;
     return await collection(collectionName).countDocuments();
   }
 };

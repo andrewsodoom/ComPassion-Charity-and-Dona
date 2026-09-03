@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import db from '../config/db.js';
 
-export const processDonation = (req, res) => {
+export const processDonation = async (req, res) => {
   try {
     const {
       campaignId,
@@ -30,7 +30,7 @@ export const processDonation = (req, res) => {
       return res.status(400).json({ success: false, message: 'Tip amount must be a non-negative number' });
     }
 
-    const campaign = db.findById('campaigns', campaignId);
+    const campaign = await db.findById('campaigns', campaignId);
     if (!campaign) {
       return res.status(404).json({ success: false, message: 'Campaign not found' });
     }
@@ -49,7 +49,7 @@ export const processDonation = (req, res) => {
     const receiptNumber = `REC-${new Date().getFullYear()}-${Math.floor(10000 + Math.random() * 90000)}`;
     const transactionId = `txn_sim_${paymentMethod.toLowerCase().includes('rzp') || paymentMethod.toLowerCase().includes('upi') ? 'rzp' : 'strp'}_${Date.now().toString().slice(-6)}${Math.floor(1000 + Math.random() * 9000)}`;
 
-    const organization = db.findById('users', campaign.organizationId);
+    const organization = await db.findById('users', campaign.organizationId);
 
     const donation = {
       id: `don_${uuidv4().substring(0, 8)}`,
@@ -79,14 +79,14 @@ export const processDonation = (req, res) => {
       createdAt: new Date().toISOString()
     };
 
-    db.insert('donations', donation);
+    await db.insert('donations', donation);
 
     // Update Campaign raised amount & donor count
     const newRaised = campaign.raisedAmount + numAmount;
     const newDonorCount = campaign.donorCount + 1;
     const isNowCompleted = newRaised >= campaign.targetAmount;
 
-    const updatedCampaign = db.update('campaigns', campaign.id, {
+    const updatedCampaign = await db.update('campaigns', campaign.id, {
       raisedAmount: newRaised,
       donorCount: newDonorCount,
       status: isNowCompleted ? 'completed' : campaign.status
@@ -94,7 +94,7 @@ export const processDonation = (req, res) => {
 
     // Create Notification for Donor (if registered)
     if (donorId) {
-      db.insert('notifications', {
+      await db.insert('notifications', {
         id: `notif_${uuidv4().substring(0, 8)}`,
         userId: donorId,
         title: 'Donation Confirmed & Receipt Ready 🎉',
@@ -108,7 +108,7 @@ export const processDonation = (req, res) => {
 
     // Create Notification for Charity Organization
     if (campaign.organizationId) {
-      db.insert('notifications', {
+      await db.insert('notifications', {
         id: `notif_${uuidv4().substring(0, 8)}`,
         userId: campaign.organizationId,
         title: 'New Donation Received! 💰',
@@ -122,7 +122,7 @@ export const processDonation = (req, res) => {
 
     // If milestone reached (100% funded)
     if (isNowCompleted && campaign.status !== 'completed') {
-      db.insert('notifications', {
+      await db.insert('notifications', {
         id: `notif_${uuidv4().substring(0, 8)}`,
         userId: campaign.organizationId,
         title: 'Goal Achieved! 🎯 Campaign 100% Funded!',
@@ -145,17 +145,17 @@ export const processDonation = (req, res) => {
   }
 };
 
-export const getReceiptById = (req, res) => {
+export const getReceiptById = async (req, res) => {
   try {
     const { receiptId } = req.params;
 
-    const donation = db.findOne('donations', d => d.receiptNumber === receiptId || d.id === receiptId);
+    const donation = await db.findOne('donations', d => d.receiptNumber === receiptId || d.id === receiptId);
     if (!donation) {
       return res.status(404).json({ success: false, message: 'Receipt not found' });
     }
 
-    const campaign = db.findById('campaigns', donation.campaignId);
-    const charityUser = db.findById('users', donation.organizationId);
+    const campaign = await db.findById('campaigns', donation.campaignId);
+    const charityUser = await db.findById('users', donation.organizationId);
 
     const fullReceipt = {
       ...donation,
@@ -187,9 +187,9 @@ export const getReceiptById = (req, res) => {
   }
 };
 
-export const getUserDonations = (req, res) => {
+export const getUserDonations = async (req, res) => {
   try {
-    const donations = db.find('donations', d => d.donorId === req.user.id || (req.user.email && d.donorEmail.toLowerCase() === req.user.email.toLowerCase()))
+    const donations = (await db.find('donations', d => d.donorId === req.user.id || (req.user.email && d.donorEmail.toLowerCase() === req.user.email.toLowerCase())))
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     const totalDonated = donations.reduce((sum, d) => sum + (d.amount || 0), 0);
@@ -211,10 +211,10 @@ export const getUserDonations = (req, res) => {
   }
 };
 
-export const getOrganizationDonations = (req, res) => {
+export const getOrganizationDonations = async (req, res) => {
   try {
     const orgId = req.user.id;
-    const donations = db.find('donations', d => d.organizationId === orgId)
+    const donations = (await db.find('donations', d => d.organizationId === orgId))
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     const totalRaised = donations.reduce((sum, d) => sum + (d.amount || 0), 0);
