@@ -79,6 +79,23 @@ export const CampaignDetailPage = () => {
     fetchCampaign();
   }, [id]);
 
+  useEffect(() => {
+    if (activeTab !== 'updates') return;
+
+    const fetchUpdates = async () => {
+      try {
+        const res = await campaignService.getUpdates(id);
+        if (res.success) {
+          setCampaign(prev => prev ? { ...prev, updates: res.updates } : prev);
+        }
+      } catch (err) {
+        console.error('Failed to refresh campaign updates:', err);
+      }
+    };
+
+    fetchUpdates();
+  }, [id, activeTab]);
+
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href);
     setCopiedLink(true);
