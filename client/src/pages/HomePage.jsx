@@ -113,11 +113,16 @@ export const HomePage = () => {
   return (
     <div className="space-y-10 lg:space-y-14 pb-20 overflow-hidden">
       {/* 1. HERO SECTION */}
-      <section className="relative pt-8 pb-10 lg:pt-16 lg:pb-10">
-        {/* Background glow ornaments */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-emerald-400/20 via-teal-400/10 to-transparent blur-3xl -z-10 rounded-full" />
+      <section
+        className="relative overflow-hidden bg-slate-950 bg-cover bg-center pt-8 pb-10 text-white lg:pt-16 lg:pb-10"
+        style={{
+          backgroundImage: "url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=2200&q=85')"
+        }}
+      >
+        <div className="absolute inset-0 bg-slate-950/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/60 via-slate-950/30 to-slate-950/85" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
+        <div className="relative z-10 mx-auto max-w-7xl space-y-8 px-4 text-center sm:px-6 lg:px-8">
           {/* Trust Pill */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-100/80 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800/80 text-xs font-semibold shadow-xs animate-in fade-in slide-in-from-bottom-2">
             <Sparkles size={14} className="text-emerald-600 dark:text-emerald-400" />
@@ -125,11 +130,11 @@ export const HomePage = () => {
           </div>
 
           {/* Main Title */}
-          <div className="space-y-4 max-w-3xl mx-auto">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.15]">
+          <div className="mx-auto max-w-3xl space-y-4">
+            <h1 className="text-4xl font-extrabold leading-[1.15] tracking-tight text-white sm:text-5xl lg:text-6xl">
               Empower Real Change with <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-400">Total Transparency</span>
             </h1>
-            <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto">
+            <p className="mx-auto max-w-2xl text-base leading-relaxed text-slate-100 sm:text-lg">
               ComPassion connects generous donors with thoroughly vetted charities and urgent humanitarian causes worldwide. Track every dollar with live progress metrics and instant tax receipts.
             </p>
           </div>
@@ -146,7 +151,7 @@ export const HomePage = () => {
 
             <Link
               to={user?.role === 'charity' ? '/dashboard/charity' : '/register?role=charity'}
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800 font-bold text-sm shadow-xs flex items-center justify-center gap-2 transition-all"
+              className="flex w-full items-center justify-center gap-2 rounded-2xl border border-white/30 bg-white/10 px-8 py-4 text-sm font-bold text-white shadow-xs backdrop-blur-md transition-all hover:bg-white/20 sm:w-auto"
             >
               <span>Start a Fundraiser</span>
               <ArrowRight size={16} />

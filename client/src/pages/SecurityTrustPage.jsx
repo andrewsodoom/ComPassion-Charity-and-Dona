@@ -3,9 +3,16 @@ import { Shield, LockKeyhole, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
 const SecurityTrustPage = () => {
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-      <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-8 shadow-sm">
-        <div className="flex items-center gap-3 mb-6">
+    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+      <div
+        className="relative isolate overflow-hidden rounded-3xl border border-slate-200 bg-cover bg-center p-6 shadow-xl dark:border-slate-800 sm:p-8"
+        style={{
+          backgroundImage: "url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1800&q=85')"
+        }}
+      >
+        <div className="absolute inset-0 z-0 bg-slate-950/75" />
+        <div className="absolute inset-0 z-0 bg-gradient-to-br from-blue-950/65 via-slate-950/35 to-emerald-950/70" />
+        <div className="relative z-10 flex items-center gap-3 mb-6">
           <div className="p-3 rounded-2xl bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-300">
             <Shield size={22} />
           </div>
@@ -15,7 +22,7 @@ const SecurityTrustPage = () => {
           </div>
         </div>
 
-        <div className="space-y-6 text-sm leading-7 text-slate-600 dark:text-slate-300">
+        <div className="relative z-10 space-y-6 text-sm leading-7 text-white/90 dark:text-slate-300">
           <p>
             Trust is essential for charity giving. ComPassion is designed to make campaign activity, donor receipts, volunteer coordination, and nonprofit verification more transparent and easier to review.
           </p>

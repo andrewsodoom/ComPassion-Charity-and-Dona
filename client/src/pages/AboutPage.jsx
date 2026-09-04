@@ -4,19 +4,28 @@ import { ShieldCheck, Heart, FileCheck, CheckCircle2, Lock, Sparkles, Building2,
 
 export const AboutPage = () => {
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-16">
+    <div className="mx-auto max-w-5xl space-y-16 px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
       {/* Header */}
-      <div className="text-center space-y-4 max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-xs font-semibold">
-          <Sparkles size={14} />
-          <span>Our Vision & Transparency Standard</span>
+      <div
+        className="relative isolate overflow-hidden rounded-[2rem] bg-cover bg-center px-5 py-14 text-center shadow-xl sm:px-10 sm:py-20"
+        style={{
+          backgroundImage: "url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=1800&q=85')"
+        }}
+      >
+        <div className="absolute inset-0 z-0 bg-slate-950/70" />
+        <div className="absolute inset-0 z-0 bg-gradient-to-br from-blue-950/60 via-slate-950/25 to-emerald-950/65" />
+        <div className="relative mx-auto max-w-3xl space-y-4">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs font-semibold text-white backdrop-blur-md">
+            <Sparkles size={14} />
+            <span>Our Vision & Transparency Standard</span>
+          </div>
+          <h1 className="text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl">
+            Pioneering Radical Transparency in Philanthropy
+          </h1>
+          <p className="text-sm leading-relaxed text-slate-100 sm:text-base">
+            ComPassion Charity and Donation was built on the belief that giving should be effortless, secure, and completely verifiable. We empower grassroots charities and global causes while guaranteeing donors full fiscal accountability.
+          </p>
         </div>
-        <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
-          Pioneering Radical Transparency in Philanthropy
-        </h1>
-        <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed">
-          ComPassion Charity and Donation was built on the belief that giving should be effortless, secure, and completely verifiable. We empower grassroots charities and global causes while guaranteeing donors full fiscal accountability.
-        </p>
       </div>
 
       {/* 3 Pillars */}

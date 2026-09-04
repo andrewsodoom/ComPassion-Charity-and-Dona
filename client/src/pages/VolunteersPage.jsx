@@ -53,19 +53,28 @@ export const VolunteersPage = () => {
   }, [isAuthenticated, user]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10">
+    <div className="mx-auto max-w-7xl space-y-10 px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
       {/* Header */}
-      <div className="text-center max-w-3xl mx-auto space-y-4">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-xs font-semibold">
-          <HeartHandshake size={15} />
-          <span>ComPassion Grassroots Volunteer Network</span>
+      <div
+        className="relative isolate overflow-hidden rounded-[2rem] bg-cover bg-center px-5 py-12 text-center shadow-xl sm:px-10 sm:py-16"
+        style={{
+          backgroundImage: "url('https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=1800&q=85')"
+        }}
+      >
+        <div className="absolute inset-0 z-0 bg-slate-950/65" />
+        <div className="absolute inset-0 z-0 bg-gradient-to-br from-emerald-950/70 via-slate-950/30 to-slate-950/75" />
+        <div className="relative mx-auto max-w-3xl space-y-4">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs font-semibold text-white backdrop-blur-md">
+            <HeartHandshake size={15} />
+            <span>ComPassion Grassroots Volunteer Network</span>
+          </div>
+          <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">
+            Join Volunteer Drives in Your Community
+          </h1>
+          <p className="text-sm text-slate-100 sm:text-base">
+            Lend a hand with food packing, animal care, tree planting, and rural digital school setups. Build your impact record and earn verified hours certificates.
+          </p>
         </div>
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-          Join Volunteer Drives in Your Community
-        </h1>
-        <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400">
-          Lend a hand with food packing, animal care, tree planting, and rural digital school setups. Build your impact record and earn verified hours certificates.
-        </p>
       </div>
 
       {/* Search & Location Bar */}

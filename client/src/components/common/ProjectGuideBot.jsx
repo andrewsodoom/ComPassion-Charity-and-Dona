@@ -4,55 +4,39 @@ import { MessageCircle, Send, X, Sparkles } from 'lucide-react';
 const buildAnswer = (question) => {
   const q = question.toLowerCase();
 
-  if (q.includes('login') || q.includes('sign in') || q.includes('account')) {
-    return 'The app uses a JWT-based auth flow. When a user signs up or logs in, the frontend sends their email and password to the backend. The backend checks the user record, creates a token, and sends it back. After that, the browser stores the token and includes it in later requests.';
+  if (q.includes('donate') || q.includes('payment') || q.includes('give')) {
+    return 'Open Campaigns, choose a cause, and select Donate. Enter the amount and donor details, then continue through the payment step. After the donation is completed, you can view the confirmation and receipt.';
   }
 
-  if (q.includes('donor')) {
-    return 'A donor can browse verified campaigns, donate to causes, and receive receipts. The donation flow usually creates a payment simulation, updates the campaign total, and records the donation in the database.';
+  if (q.includes('receipt') || q.includes('donation history') || q.includes('past donation')) {
+    return 'Sign in and open your Donor Dashboard. My Impact & Receipts shows your donation history. Select a donation to view its receipt, or open the receipt page from a donation confirmation.';
   }
 
-  if (q.includes('charity') || q.includes('organization')) {
-    return 'A charity can create and manage campaigns, publish updates, and request verification. The admin reviews documents and can mark the organization as verified before the charity gets trust badges and promotion.';
+  if (q.includes('campaign') || q.includes('cause') || q.includes('find')) {
+    return 'Select Campaigns in the navigation to browse causes. Use the search and filters to narrow the list, then select a campaign to read its story, updates, progress, and volunteer opportunities.';
   }
 
-  if (q.includes('volunteer')) {
-    return 'A volunteer can browse opportunities, apply for shifts, and track service activities. The app supports role-based views so each user sees the features relevant to them.';
+  if (q.includes('volunteer') || q.includes('opportunit') || q.includes('apply')) {
+    return 'Open Volunteers to browse available opportunities, or open a campaign and view its Volunteers section. Choose an opportunity, select Apply, complete the form, and submit your application. Sign in first if prompted.';
   }
 
-  if (q.includes('campaign')) {
-    return 'Campaigns are the main fundraising items. Each campaign has a title, description, goal, target amount, category, location, and organization details. The frontend fetches them from /api/campaigns and shows them in cards and filters.';
+  if (q.includes('login') || q.includes('sign in') || q.includes('register') || q.includes('sign up') || q.includes('account')) {
+    return 'Select Sign In to access your account, or choose Register to create one. Use Forgot password on the sign-in page if you cannot remember your password. Your dashboard will show the options available for your role.';
   }
 
-  if (q.includes('donate') || q.includes('payment') || q.includes('receipt')) {
-    return 'Donation actions start from a campaign card. The user chooses an amount, the app simulates payment processing, and the backend updates the campaign raised value. A receipt is then generated for a donor to view or download.';
+  if (q.includes('charity') || q.includes('organization') || q.includes('create a campaign')) {
+    return 'After signing in with a charity account, open the Charity Dashboard. Use Create Campaign to add your cause, then complete the campaign details and submit it. You can manage campaigns, post updates, and review volunteer applications from the dashboard.';
   }
 
-  if (q.includes('mongo') || q.includes('database') || q.includes('atlas')) {
-    return 'This project stores main data in MongoDB Atlas. The backend connects in the server config, then reads and writes users, campaigns, donations, updates, and volunteer records through Mongo collections. The app is designed so the frontend never talks directly to MongoDB.';
+  if (q.includes('admin') || q.includes('verify')) {
+    return 'Administrators can sign in and open the Admin Dashboard to review charities, verification requests, campaigns, and platform activity.';
   }
 
-  if (q.includes('how this app works') || q.includes('system') || q.includes('flow')) {
-    return 'Think of it as three layers: frontend, backend API, and database. The React app displays pages and dashboards, the Express server handles requests, and MongoDB stores the real data. The browser sends requests to /api, and the server returns JSON responses.';
+  if (q.includes('home') || q.includes('about') || q.includes('contact') || q.includes('navigate') || q.includes('where')) {
+    return 'Use the top navigation to visit Home, Campaigns, Volunteers, or About. Home highlights causes and actions, Campaigns lists fundraisers, Volunteers lists opportunities, and About explains the platform.';
   }
 
-  if (q.includes('frontend') || q.includes('client')) {
-    return 'The client lives in the /client folder. It contains pages, components, and service files that call the backend API. It is what users see in the browser.';
-  }
-
-  if (q.includes('backend') || q.includes('server')) {
-    return 'The backend lives in the /server folder. It runs Express, handles auth, processes campaign and donation logic, and talks to MongoDB Atlas.';
-  }
-
-  if (q.includes('where') || q.includes('start') || q.includes('begin')) {
-    return 'Start in the frontend route /campaigns, then follow the auth flow in /login and /register. For a deeper understanding, check the server controllers for campaign, donation, and auth logic.';
-  }
-
-  if (q.includes('admin')) {
-    return 'The admin role can verify charities, review submissions, and review platform analytics. The admin dashboard surfaces statistics about campaigns, users, and verification status.';
-  }
-
-  return 'I can explain the project in simple terms: ask about login, campaigns, donations, MongoDB, roles, or how the app works as a whole. I can also help you navigate the code flow.';
+  return 'I can help you use the website. Ask how to find a campaign, make a donation, view a receipt, apply to volunteer, create an account, or use a dashboard.';
 };
 
 const ProjectGuideBot = () => {
@@ -61,19 +45,19 @@ const ProjectGuideBot = () => {
   const [messages, setMessages] = useState([
     {
       sender: 'bot',
-      text: 'Hi! I can explain how this charity app works. Ask me about login, campaigns, donations, MongoDB, or user roles.'
+      text: 'Hi! I can help you use the website. Ask me how to find a cause, donate, view a receipt, or volunteer.'
     }
   ]);
 
   const quickPrompts = useMemo(() => [
-    'How does the app work?',
-    'What is the login flow?',
-    'How do campaigns work?',
-    'How does MongoDB fit in?'
+    'How do I find a campaign?',
+    'How do I make a donation?',
+    'Where can I find my receipt?',
+    'How do I apply to volunteer?'
   ], []);
 
-  const handleSend = () => {
-    const trimmed = input.trim();
+  const handleSend = (question = input) => {
+    const trimmed = question.trim();
     if (!trimmed) return;
 
     const userMessage = { sender: 'user', text: trimmed };
@@ -123,7 +107,7 @@ const ProjectGuideBot = () => {
                 <button
                   key={prompt}
                   type="button"
-                  onClick={() => setInput(prompt)}
+                  onClick={() => handleSend(prompt)}
                   className="rounded-full border border-slate-200 bg-slate-50 px-2 py-1 text-[11px] text-slate-600 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300"
                 >
                   {prompt}
